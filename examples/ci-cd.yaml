@@ -1,0 +1,27 @@
+# CI/CD Micron configuration
+# Non-interactive mode for automated pipelines
+
+log_level: warn
+verbose: false
+
+# CI/CD optimization - skip confirmations
+optimize:
+  dry_run: false
+  yes: true  # Auto-confirm all actions
+  allow_large_files: false
+  remove_tests: true   # Remove test artifacts in CI
+  remove_docs: true  # Remove docs in CI
+  remove_examples: true
+  exclude:
+    - "*.env"
+    - "*.secret"
+    - "config/**"
+
+# Pack settings for CI artifacts
+pack:
+  format: zstd
+  level: 6  # Higher compression for storage
+  exclude:
+    - "*.log"
+    - "*.tmp"
+    - ".git/**"

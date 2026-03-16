@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/micron/micron/pkg/compressor"
-	"github.com/micron/micron/pkg/logger"
+	"github.com/micron/micron/pkg/core/logger"
+	"github.com/micron/micron/pkg/pipeline/compressor"
 	"github.com/spf13/cobra"
 )
 

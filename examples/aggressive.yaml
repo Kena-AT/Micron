@@ -1,0 +1,28 @@
+# Aggressive Micron configuration
+# Removes more file types for maximum size reduction
+
+log_level: info
+verbose: true
+
+# Aggressive optimization
+optimize:
+  dry_run: false
+  yes: false  # Still prompt for confirmation due to aggressive settings
+  allow_large_files: true  # Allow deleting large files
+  remove_tests: true
+  remove_docs: true
+  remove_examples: true
+  exclude:
+    - "*.env"
+    - "*.secret"
+    - "*.key"
+    - "config/production.*"
+
+# Maximum compression
+pack:
+  format: zstd
+  level: 22  # Maximum zstd compression
+  exclude:
+    - "*.log"
+    - "*.tmp"
+    - ".cache/**"

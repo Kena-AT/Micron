@@ -1,0 +1,27 @@
+# Default Micron configuration
+# Copy this file to ~/.micron.yaml
+
+# Log level: debug, info, warn, error
+log_level: info
+
+# Verbose output
+verbose: false
+
+# Default optimization settings
+optimize:
+  dry_run: false
+  allow_large_files: false
+  remove_tests: false
+  remove_docs: false
+  remove_examples: false
+  exclude:
+    - "*.env"
+    - "*.secret"
+
+# Default pack settings
+pack:
+  format: zstd  # or gzip
+  level: 3
+  exclude:
+    - "*.log"
+    - "*.tmp"

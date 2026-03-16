@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/micron/micron/pkg/analyzer"
-	"github.com/micron/micron/pkg/logger"
-	"github.com/micron/micron/pkg/optimizer"
-	"github.com/micron/micron/pkg/scanner"
+	"github.com/micron/micron/pkg/analysis/analyzer"
+	"github.com/micron/micron/pkg/core/logger"
+	"github.com/micron/micron/pkg/core/scanner"
+	"github.com/micron/micron/pkg/pipeline/optimizer"
 	"github.com/spf13/cobra"
 )
 

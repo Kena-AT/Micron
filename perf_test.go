@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/micron/micron/pkg/scanner"
+	"github.com/micron/micron/pkg/core/scanner"
 )
 
 func Run() {

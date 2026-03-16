@@ -6,11 +6,11 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/micron/micron/pkg/analyzer"
-	"github.com/micron/micron/pkg/compressor"
-	"github.com/micron/micron/pkg/optimizer"
-	"github.com/micron/micron/pkg/report"
-	"github.com/micron/micron/pkg/scanner"
+	"github.com/micron/micron/pkg/analysis/analyzer"
+	"github.com/micron/micron/pkg/analysis/report"
+	"github.com/micron/micron/pkg/core/scanner"
+	"github.com/micron/micron/pkg/pipeline/compressor"
+	"github.com/micron/micron/pkg/pipeline/optimizer"
 )
 
 // TestFullPipeline tests the complete scan → analyze → optimize → pack workflow
