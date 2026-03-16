@@ -1,0 +1,10 @@
+# Documents
+*.docx
+*.doc
+*.tmp
+*.pen
+*.swp
+
+# Word temp
+~$*.docx
+~$*.xlsx
