@@ -21,6 +21,7 @@ const (
 	TypeTemp      FileType = "temp"
 	TypeDebug     FileType = "debug"
 	TypeDuplicate FileType = "duplicate"
+	TypeSymlink   FileType = "symlink"
 	TypeUnknown   FileType = "unknown"
 )
 
@@ -41,41 +42,45 @@ type FileEntry struct {
 
 // DirectoryEntry represents metadata for a directory
 type DirectoryEntry struct {
-	Path          string       `json:"path"`
-	Name          string       `json:"name"`
-	FileCount     int          `json:"file_count"`
-	DirCount      int          `json:"dir_count"`
-	TotalSize     int64        `json:"total_size"`
-	Files         []FileEntry  `json:"files,omitempty"`
+	Path           string           `json:"path"`
+	Name           string           `json:"name"`
+	FileCount      int              `json:"file_count"`
+	DirCount       int              `json:"dir_count"`
+	TotalSize      int64            `json:"total_size"`
+	Files          []FileEntry      `json:"files,omitempty"`
 	Subdirectories []DirectoryEntry `json:"subdirectories,omitempty"`
 }
 
 // ScanResult contains the complete scan results
 type ScanResult struct {
-	RootPath      string           `json:"root_path"`
-	TotalFiles    int              `json:"total_files"`
-	TotalDirs     int              `json:"total_dirs"`
-	TotalSize     int64            `json:"total_size"`
-	FilesByType   map[FileType]int `json:"files_by_type"`
-	SizeByType    map[FileType]int64 `json:"size_by_type"`
-	Files         []FileEntry      `json:"files"`
-	Duplicates    []DuplicateGroup `json:"duplicates"`
-	Directories   []DirectoryEntry `json:"directories"`
-	ScanTimeMs    int64            `json:"scan_time_ms"`
+	RootPath    string             `json:"root_path"`
+	TotalFiles  int                `json:"total_files"`
+	TotalDirs   int                `json:"total_dirs"`
+	TotalSize   int64              `json:"total_size"`
+	FilesByType map[FileType]int   `json:"files_by_type"`
+	SizeByType  map[FileType]int64 `json:"size_by_type"`
+	Files       []FileEntry        `json:"files"`
+	Duplicates  []DuplicateGroup   `json:"duplicates"`
+	Directories []DirectoryEntry   `json:"directories"`
+	ScanTimeMs  int64              `json:"scan_time_ms"`
 }
 
 // DuplicateGroup represents a group of duplicate files
 type DuplicateGroup struct {
-	Hash     string   `json:"hash"`
-	Size     int64    `json:"size"`
-	Count    int      `json:"count"`
-	Files    []string `json:"files"`
-	WastedSpace int64 `json:"wasted_space"`
+	Hash        string   `json:"hash"`
+	Size        int64    `json:"size"`
+	Count       int      `json:"count"`
+	Files       []string `json:"files"`
+	WastedSpace int64    `json:"wasted_space"`
 }
 
 // NewFileEntry creates a new FileEntry from file info
 func NewFileEntry(path string, info os.FileInfo) *FileEntry {
 	ext := filepath.Ext(info.Name())
+	fileType := DetectFileType(ext, info.Name())
+	if info.Mode()&os.ModeSymlink != 0 {
+		fileType = TypeSymlink
+	}
 	return &FileEntry{
 		Path:         path,
 		Name:         info.Name(),
@@ -84,7 +89,7 @@ func NewFileEntry(path string, info os.FileInfo) *FileEntry {
 		ModTime:      info.ModTime().Unix(),
 		IsDir:        info.IsDir(),
 		HashComputed: false,
-		Type:         DetectFileType(ext, info.Name()),
+		Type:         fileType,
 	}
 }
 
@@ -92,6 +97,9 @@ func NewFileEntry(path string, info os.FileInfo) *FileEntry {
 func (f *FileEntry) ComputeHash() error {
 	if f.IsDir {
 		return fmt.Errorf("cannot hash directory")
+	}
+	if f.Type == TypeSymlink {
+		return fmt.Errorf("cannot hash symlink")
 	}
 
 	file, err := os.Open(f.Path)
